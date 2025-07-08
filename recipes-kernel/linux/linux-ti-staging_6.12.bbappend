@@ -4,6 +4,7 @@ LICENSE = "MIT"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI += " \
+    file://external/bbb.io/0001-Add-BeagleBoard.org-Device-Tree-Changes.patch \
     file://backports/it66121/0001-backports-it66121-from-linux.git.patch \
     file://mainline/ite-it66121/0001-drm-bridge-it66121-Convert-to-i2c-s-.probe_new.patch \
     file://mainline/ite-it66121/0002-drm-bridge-it66121-Use-devm_regulator_bulk_get_enabl.patch \
