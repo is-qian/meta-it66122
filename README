@@ -1,41 +1,91 @@
-This README file contains information on the contents of the meta-it66122 layer.
+# meta-it66122 Layer
 
-Please see the corresponding sections below for details.
+## Overview
 
-Dependencies
-============
+The `meta-it66122` layer enables IT66122 HDMI chip support for the BeagleBone Black in a Yocto build environment. It includes the IT66122 driver, firmware, custom device tree (`am335x-boneblack-ite-hdmi.dtb`), and Xorg configuration for HDMI output using the `tilcdc` driver.
 
-  URI: <first dependency>
-  branch: <branch name>
+## Usage Instructions
 
-  URI: <second dependency>
-  branch: <branch name>
+### 1. Add the meta-it66122 Layer
 
-  .
-  .
-  .
+1. **Clone Required Repositories**:
 
-Patches
-=======
+   ```bash
+   mkdir -p ~/yocto
+   cd ~/yocto
+   git clone -b scarthgap git://git.yoctoproject.org/poky
+   cd poky
+   git clone -b scarthgap git://git.yoctoproject.org/meta-ti
+   git clone -b scarthgap git://git.openembedded.org/meta-openembedded
+   git clone -b scarthgap git://git.yoctoproject.org/meta-arm
+   git clone https://github.com/is-qian/meta-it66122.git
+   ```
 
-Please submit any patches against the meta-it66122 layer to the xxxx mailing list (xxxx@zzzz.org)
-and cc: the maintainer:
+   *Replace* `<your-repo>` *with the actual repository URL for* `meta-it66122`*.*
 
-Maintainer: XXX YYYYYY <xxx.yyyyyy@zzzzz.com>
+2. **Initialize Build Environment**:
 
-Table of Contents
-=================
+   ```bash
+   source oe-init-build-env build
+   ```
 
-  I. Adding the meta-it66122 layer to your build
- II. Misc
+3. **Update bblayers.conf**: Edit `~/yocto/poky/build/conf/bblayers.conf` to include `meta-it66122`:
 
+   ```conf
+   BBLAYERS += "${TOPDIR}/../meta-ti/meta-ti-bsp"
+   BBLAYERS += "${TOPDIR}/../meta-openembedded/meta-oe"
+   BBLAYERS += "${TOPDIR}/../meta-arm/meta-arm"
+   BBLAYERS += "${TOPDIR}/../meta-arm/meta-arm-toolchain"
+   BBLAYERS += "${TOPDIR}/../meta-it66122"
+   ```
 
-I. Adding the meta-it66122 layer to your build
-=================================================
+4. **Configure local.conf**: Edit `~/yocto/poky/build/conf/local.conf`:
 
-Run 'bitbake-layers add-layer meta-it66122'
+   ```conf
+   MACHINE = "beaglebone-yocto"
+   DISTRO = "poky"
+   PREFERRED_PROVIDER_virtual/kernel = "linux-ti-staging"
+   ```
 
-II. Misc
-========
+### 2. Compile the Image
 
---- replace with specific information about the meta-it66122 layer ---
+1. **Clean Previous Builds**:
+
+   ```bash
+   cd ~/yocto/poky/build
+   bitbake -c cleanall linux-ti-staging
+   ```
+2. **Build the Image**:
+
+   ```bash
+   bitbake -k core-image-sato
+   ```
+
+### 3. Flash the Image
+
+1. **Locate the Image**:
+
+   ```bash
+   ls ~/yocto/poky/build/tmp/deploy/images/beaglebone-yocto/core-image-sato-beaglebone-yocto.wic
+   ```
+
+2. **Flash to SD Card**: Identify the SD card device (e.g., `/dev/sdX`):
+
+   ```bash
+   lsblk
+   ```
+
+   Flash the image:
+
+   ```bash
+   sudo dd if=tmp/deploy/images/beaglebone-yocto/core-image-sato-beaglebone-yocto.wic of=/dev/sdX bs=4M status=progress
+   sync
+   ```
+
+   *Replace* `/dev/sdX` *with the correct device name.*
+
+3. **Eject the SD Card**:
+
+   ```bash
+   sudo eject /dev/sdX
+   ```
