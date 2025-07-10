@@ -44,6 +44,9 @@ SRC_URI += " \
     file://defconfig \
 "
 
+KERNEL_DEVICETREE += " ti/omap/am335x-boneblack-revd.dtb"
+DEVICETREE_FILE += "am335x-boneblack-revd.dtb"
+
 do_configure:append() {
     install -d ${S}/firmware
     install -m 0644 ${WORKDIR}/firmware/am335x-bone-scale-data.bin ${S}/firmware/
