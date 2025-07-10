@@ -34,6 +34,29 @@ SRC_URI += " \
     file://drivers/it66121_drm_connector/0004-ite-it66121-drm_connector-switch-to-edid_read-callba.patch \
     file://drivers/it66122/0001-dt-bindings-display-bridge-it66121-Add-compatible-st.patch \
     file://drivers/it66122/0002-drm-bridge-it66121-Add-it66122-support.patch \
+    file://firmware/am335x-bone-scale-data.bin \
+    file://firmware/am335x-evm-scale-data.bin \
+    file://firmware/am335x-pm-firmware.bin \
+    file://firmware/am335x-pm-firmware.elf \
+    file://firmware/regulatory.db \
+    file://firmware/regulatory.db.p7s \
     file://0001-add-ite-it66122.patch \
     file://defconfig \
 "
+
+do_configure:append() {
+    install -d ${S}/firmware
+    install -m 0644 ${WORKDIR}/firmware/am335x-bone-scale-data.bin ${S}/firmware/
+    install -m 0644 ${WORKDIR}/firmware/am335x-evm-scale-data.bin ${S}/firmware/
+    install -m 0644 ${WORKDIR}/firmware/am335x-pm-firmware.bin ${S}/firmware/
+    install -m 0644 ${WORKDIR}/firmware/am335x-pm-firmware.elf ${S}/firmware/
+    install -m 0644 ${WORKDIR}/firmware/regulatory.db ${S}/firmware/
+    install -m 0644 ${WORKDIR}/firmware/regulatory.db.p7s ${S}/firmware/
+}
+
+FILES:${PN} += "${nonarch_base_libdir}/firmware/am335x-bone-scale-data.bin"
+FILES:${PN} += "${nonarch_base_libdir}/firmware/am335x-evm-scale-data.bin"
+FILES:${PN} += "${nonarch_base_libdir}/firmware/am335x-pm-firmware.bin"
+FILES:${PN} += "${nonarch_base_libdir}/firmware/am335x-pm-firmware.elf"
+FILES:${PN} += "${nonarch_base_libdir}/firmware/regulatory.db"
+FILES:${PN} += "${nonarch_base_libdir}/firmware/regulatory.db.p7s"
